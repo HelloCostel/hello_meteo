@@ -1,13 +1,18 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react'
 import './App.css'
+
+//Open-meteo API
+import { fetchWeatherApi } from 'openmeteo'
+const meteoUrl = "https://api.open-meteo.com/v1/forecast"
+
+
+//Child components
 import Search from './components/Search.jsx'
+import Weather from './components/Weather.jsx'
+
 
 function App() {
-
-    //TO DO --> Update to use current device location as default coordinates
-
+  //TO DO --> Update to use current device location as default coordinates
   const [lat, setLat] = useState(41.89)
   const [lon, setLon] = useState(12.48)
 
@@ -30,11 +35,83 @@ function App() {
     }
   }
 
+  //Get weather data from open-meteo.com
+  const params = {
+    "latitude": lat,
+    "longitude": lon,
+    "daily": ["sunrise", "sunset"],
+    "hourly": ["temperature_2m", "weather_code", "wind_speed_10m", "wind_direction_10m", "uv_index", "is_day"],
+    "timezone": "auto",
+    "forecast_days": 1,
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responses = await fetchWeatherApi(meteoUrl, params)
+        //Process first location. Add a for-loop for multiple locations or weather models
+        const response = responses[0]
+        
+        // Attributes for timezone and location
+        const latitude = response.latitude();
+        const longitude = response.longitude();
+        const elevation = response.elevation();
+        const utcOffsetSeconds = response.utcOffsetSeconds();
+        console.log(
+          `\nCoordinates: ${latitude}°N ${longitude}°E`,
+          `\nElevation: ${elevation}m asl`,
+          `\nTimezone difference to GMT+0: ${utcOffsetSeconds}s`,
+        );
+
+        const hourly = response.hourly();
+        const daily = response.daily();
+
+        // Define Int64 variables so they can be processed accordingly
+        const sunrise = daily.variables(0);
+        const sunset = daily.variables(1);
+
+        // Note: The order of weather variables in the URL query and the indices below need to match!
+        const weatherData = {
+          hourly: {
+            time: [...Array((Number(hourly.timeEnd()) - Number(hourly.time())) / hourly.interval())].map(
+              (_, i) => new Date((Number(hourly.time()) + i * hourly.interval() + utcOffsetSeconds) * 1000)
+            ),
+            temperature_2m: hourly.variables(0).valuesArray(),
+            weather_code: hourly.variables(1).valuesArray(),
+            wind_speed_10m: hourly.variables(2).valuesArray(),
+            wind_direction_10m: hourly.variables(3).valuesArray(),
+            uv_index: hourly.variables(4).valuesArray(),
+            is_day: hourly.variables(5).valuesArray(),
+          },
+          daily: {
+            time: [...Array((Number(daily.timeEnd()) - Number(daily.time())) / daily.interval())].map(
+              (_, i) => new Date((Number(daily.time()) + i * daily.interval() + utcOffsetSeconds) * 1000)
+            ),
+            // Map Int64 values to according structure
+            sunrise: [...Array(sunrise.valuesInt64Length())].map(
+              (_, i) => new Date((Number(sunrise.valuesInt64(i)) + utcOffsetSeconds) * 1000)
+            ),
+            // Map Int64 values to according structure
+            sunset: [...Array(sunset.valuesInt64Length())].map(
+              (_, i) => new Date((Number(sunset.valuesInt64(i)) + utcOffsetSeconds) * 1000)
+            ),
+          },
+        }
+        // 'weatherData' now contains a simple structure with arrays with datetime and weather data
+        console.log("\nHourly data", weatherData.hourly)
+        console.log("\nDaily data", weatherData.daily)
+      }
+      catch (error) {
+        console.error('Error while fetching weather data:', error)
+      }
+    }
+    fetchData()
+  }, [lat, lon])
+
   return (
     <>
       <Search getCoordinates={getCoordinates}/>
-      <p>Latitudine: {lat}</p>
-      <p>Longitudine: {lon}</p>
+      <Weather />
     </>
   )
 }
