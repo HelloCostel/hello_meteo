@@ -5,18 +5,18 @@ import './App.css'
 import { fetchWeatherApi } from 'openmeteo'
 const meteoUrl = "https://api.open-meteo.com/v1/forecast"
 
-
 //Child components
 import Search from './components/Search.jsx'
 import Weather from './components/Weather.jsx'
 
 
-function App() {
+export default function App() {
   //TO DO --> Update to use current device location as default coordinates
   const [lat, setLat] = useState(41.89)
   const [lon, setLon] = useState(12.48)
+  const [weather, setWeather] = useState();
 
-  //Get coordinates form nominatim.org
+  //Get coordinates from nominatim.org
   const getCoordinates = async (cityName) => {
     const cityUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(cityName)}&format=json&addressdetails=1`
     try {
@@ -98,8 +98,7 @@ function App() {
           },
         }
         // 'weatherData' now contains a simple structure with arrays with datetime and weather data
-        console.log("\nHourly data", weatherData.hourly)
-        console.log("\nDaily data", weatherData.daily)
+        setWeather(weatherData)
       }
       catch (error) {
         console.error('Error while fetching weather data:', error)
@@ -111,9 +110,7 @@ function App() {
   return (
     <>
       <Search getCoordinates={getCoordinates}/>
-      <Weather />
+      {weather && <Weather weather={weather}/>}
     </>
   )
 }
-
-export default App
