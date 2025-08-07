@@ -30,11 +30,9 @@ const WEATHER_CODES = {
     99: "Thunderstorm with heavy hail",
 };
 
-export default function Weather({ weather }) {
-    const date = new Date();
-    const hour = date.getHours();
-    const temperature = weather.hourly.temperature_2m[hour];
-    const code = weather.hourly.weather_code[hour];
+export default function Weather({ weather, activeTime }) {
+    const temperature = weather.hourly.temperature_2m[activeTime];
+    const code = weather.hourly.weather_code[activeTime];
     const weatherDescription = WEATHER_CODES[code] || "Unknown";
 
     return (

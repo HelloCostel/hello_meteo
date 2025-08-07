@@ -8,12 +8,14 @@ const meteoUrl = "https://api.open-meteo.com/v1/forecast"
 //Child components
 import Search from './components/Search.jsx'
 import Weather from './components/Weather.jsx'
-
+import TimeCarousel from './components/TimeCarousel.jsx'
 
 export default function App() {
   //TO DO --> Update to use current device location as default coordinates
+  const currentHour = new Date().getHours().toString()
   const [lat, setLat] = useState(41.89)
   const [lon, setLon] = useState(12.48)
+  const [activeTime, setActiveTime] = useState(currentHour)
   const [weather, setWeather] = useState();
 
   //Get coordinates from nominatim.org
@@ -110,7 +112,8 @@ export default function App() {
   return (
     <>
       <Search getCoordinates={getCoordinates}/>
-      {weather && <Weather weather={weather}/>}
+      {weather && <Weather weather={weather} activeTime={activeTime}/>}
+      <TimeCarousel activeTime={activeTime} setActiveTime={setActiveTime}/>
     </>
   )
 }
