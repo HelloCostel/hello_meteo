@@ -6,9 +6,13 @@ import { fetchWeatherApi } from 'openmeteo'
 const meteoUrl = "https://api.open-meteo.com/v1/forecast"
 
 //Child components
-import Search from './components/Search.jsx'
-import Weather from './components/Weather.jsx'
-import TimeCarousel from './components/TimeCarousel.jsx'
+import Search from './components/Search/Search.jsx'
+import Weather from './components/Weather/Weather.jsx'
+import TimeCarousel from './components/TimeCarousel/TimeCarousel.jsx'
+import Widget from './components/Widget/Widget.jsx'
+import Wind from './components/Wind/Wind.jsx'
+import UvIndex from './components/UvIndex/UvIndex.jsx'
+
 
 export default function App() {
   //TO DO --> Update to use current device location as default coordinates
@@ -112,8 +116,20 @@ export default function App() {
   return (
     <>
       <Search getCoordinates={getCoordinates}/>
-      {weather && <Weather weather={weather} activeTime={activeTime}/>}
+      {weather &&
+      <Weather weather={weather} activeTime={activeTime}/>
+      }
       <TimeCarousel activeTime={activeTime} setActiveTime={setActiveTime}/>
+      {weather &&
+        <>
+          <Widget>
+            <Wind speed={Math.floor(weather.hourly.wind_speed_10m[activeTime])} direction={weather.hourly.wind_direction_10m[activeTime]}/>
+          </Widget>
+          <Widget>
+            <UvIndex level={Math.floor(weather.hourly.uv_index[activeTime])}/>
+          </Widget>
+        </>
+      }
     </>
   )
 }
