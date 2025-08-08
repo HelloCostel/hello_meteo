@@ -7,6 +7,7 @@ export default function Wind({ speed, direction}) {
     const compassRotation = {
         transform: `rotate(${direction}deg)`,
     }
+
     return (
         <div className={styles.compass}>
             <div className={styles.speed}>Wind<br /><span>{speed} Km/h</span></div>

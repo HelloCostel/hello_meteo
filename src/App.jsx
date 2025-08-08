@@ -3,7 +3,7 @@ import './App.css'
 
 //Open-meteo API
 import { fetchWeatherApi } from 'openmeteo'
-const meteoUrl = "https://api.open-meteo.com/v1/forecast"
+const weatherUrl = "https://api.open-meteo.com/v1/forecast"
 
 //Child components
 import Search from './components/Search/Search.jsx'
@@ -12,7 +12,7 @@ import TimeCarousel from './components/TimeCarousel/TimeCarousel.jsx'
 import Widget from './components/Widget/Widget.jsx'
 import Wind from './components/Wind/Wind.jsx'
 import UvIndex from './components/UvIndex/UvIndex.jsx'
-
+import SunPosition from './components/SunPosition/SunPosition.jsx'
 
 export default function App() {
   //TO DO --> Update to use current device location as default coordinates
@@ -21,6 +21,15 @@ export default function App() {
   const [lon, setLon] = useState(12.48)
   const [activeTime, setActiveTime] = useState(currentHour)
   const [weather, setWeather] = useState();
+
+  const weatherParams = {
+    "latitude": lat,
+    "longitude": lon,
+    "daily": ["sunrise", "sunset"],
+    "hourly": ["temperature_2m", "weather_code", "wind_speed_10m", "wind_direction_10m", "uv_index", "is_day"],
+    "timezone": "auto",
+    "forecast_days": 1,
+  };
 
   //Get coordinates from nominatim.org
   const getCoordinates = async (cityName) => {
@@ -42,19 +51,10 @@ export default function App() {
   }
 
   //Get weather data from open-meteo.com
-  const params = {
-    "latitude": lat,
-    "longitude": lon,
-    "daily": ["sunrise", "sunset"],
-    "hourly": ["temperature_2m", "weather_code", "wind_speed_10m", "wind_direction_10m", "uv_index", "is_day"],
-    "timezone": "auto",
-    "forecast_days": 1,
-  };
-
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchWeatherData = async () => {
       try {
-        const responses = await fetchWeatherApi(meteoUrl, params)
+        const responses = await fetchWeatherApi(weatherUrl, weatherParams)
         //Process first location. Add a for-loop for multiple locations or weather models
         const response = responses[0]
         
@@ -110,8 +110,9 @@ export default function App() {
         console.error('Error while fetching weather data:', error)
       }
     }
-    fetchData()
+    fetchWeatherData()
   }, [lat, lon])
+
 
   return (
     <>
@@ -122,6 +123,7 @@ export default function App() {
       <TimeCarousel activeTime={activeTime} setActiveTime={setActiveTime}/>
       {weather &&
         <>
+          <SunPosition isDay={weather.hourly.is_day[activeTime]} activeTime={activeTime} sunrise={weather.daily.sunrise[0]} sunset={weather.daily.sunset[0]}/>
           <Widget>
             <Wind speed={Math.floor(weather.hourly.wind_speed_10m[activeTime])} direction={weather.hourly.wind_direction_10m[activeTime]}/>
           </Widget>
