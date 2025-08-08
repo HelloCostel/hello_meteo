@@ -37,8 +37,8 @@ export default function Weather({ weather, activeTime }) {
 
     return (
         <>
-            <p>Temperature: {Math.round(temperature)}°C</p>
-            <p>Weather: {weatherDescription}</p>
+            <p className='text-3xl'>{weatherDescription}</p>
+            <p className='text-8xl'>{Math.round(temperature)}°C</p>
         </>
     );
 }
