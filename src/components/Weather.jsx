@@ -1,3 +1,31 @@
+//Weather images
+import dayDepositingRimeFog from '../assets/day_depositing_rime_fog.svg'
+import dayFog from '../assets/day_fog.svg'
+import dayMainlyClear from '../assets/day_mainly_clear.svg'
+import dayPartyCloudy from '../assets/day_party_cloudy.svg'
+import denseDrizzle from '../assets/dense_drizzle.svg'
+import drizzle from '../assets/drizzle.svg'
+import freezingDenseDrizzle from '../assets/freezing_dense_drizzle.svg'
+import freezingDrizzle from '../assets/freezing_drizzle.svg'
+import freezingHeavyRain from '../assets/freezing_heavy_rain.svg'
+import freezingRain from '../assets/freezing_rain.svg'
+import heavyRain from '../assets/heavy_rain.svg'
+import heavySnowFall from '../assets/heavy_snow_fall.svg'
+import moderateRain from '../assets/moderate_rain.svg'
+import moon from '../assets/moon.svg'
+import nightDepositingRimeFog from '../assets/night_depositing_rime_fog.svg'
+import nightFog from '../assets/night_fog.svg'
+import nightMainlyClear from '../assets/night_mainly_clear.svg'
+import nightPartyCloudy from '../assets/night_party_cloudy.svg'
+import overcast from '../assets/overcast.svg'
+import rain from '../assets/rain.svg'
+import sligthlySnow from '../assets/sligthly_snow.svg'
+import snowFall from '../assets/snow_fall.svg'
+import sun from '../assets/sun.svg'
+import thunderstormHail from '../assets/thunderstorm_hail.svg'
+import thunderstorm from '../assets/thunderstorm.svg'
+import uvAlert from '../assets/uv_alert.svg'
+
 //Weather codes interpretation from open-meteo.com
 const WEATHER_CODES = {
     0: "Clear sky",
