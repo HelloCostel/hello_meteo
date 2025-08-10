@@ -27,46 +27,51 @@ import thunderstorm from '../assets/thunderstorm.svg'
 import uvAlert from '../assets/uv_alert.svg'
 
 //Weather codes interpretation from open-meteo.com
+//Array indices represent: description, day image, night image
 const WEATHER_CODES = {
-    0: "Clear sky",
-    1: "Mainly clear",
-    2: "Partly cloudy",
-    3: "Overcast",
-    45: "Fog",
-    48: "Depositing rime fog",
-    51: "Light drizzle",
-    53: "Moderate drizzle",
-    55: "Dense drizzle",
-    56: "Light freezing drizzle",
-    57: "Dense freezing drizzle",
-    61: "Slight rain",
-    63: "Moderate rain",
-    65: "Heavy rain",
-    66: "Light freezing rain",
-    67: "Heavy freezing rain",
-    71: "Slight snow fall",
-    73: "Moderate snow fall",
-    75: "Heavy snow fall",
-    77: "Snow grains",
-    80: "Slight rain showers",
-    81: "Moderate rain showers",
-    82: "Heavy rain showers",
-    85: "Slight snow showers",
-    86: "Heavy snow showers",
-    95: "Thunderstorm",
-    96: "Thunderstorm with slight hail",
-    99: "Thunderstorm with heavy hail",
+    0: ["Clear sky", sun, moon], // Sereno
+    1: ["Mainly clear", dayMainlyClear, nightMainlyClear], // Prevalentemente sereno
+    2: ["Partly cloudy", dayPartyCloudy, nightPartyCloudy], // Parzialmente nuvoloso
+    3: ["Overcast", overcast, overcast], // Coperto
+    45: ["Fog", dayFog, nightFog], // Nebbia
+    48: ["Depositing rime fog", dayDepositingRimeFog, nightDepositingRimeFog], // Nebbia con brina
+    51: ["Light drizzle", drizzle, drizzle], // Pioggerella leggera
+    53: ["Moderate drizzle", drizzle, drizzle], // Pioggerella moderata
+    55: ["Dense drizzle", denseDrizzle, denseDrizzle], // Pioggerella fitta
+    56: ["Light freezing drizzle", freezingDrizzle, freezingDrizzle], // Pioggerella gelata leggera
+    57: ["Dense freezing drizzle", freezingDenseDrizzle, freezingDenseDrizzle], // Pioggerella gelata fitta
+    61: ["Slight rain", rain, rain], // Pioggia debole
+    63: ["Moderate rain", moderateRain, moderateRain], // Pioggia moderata
+    65: ["Heavy rain", heavyRain, heavyRain], // Pioggia forte
+    66: ["Light freezing rain", freezingRain, freezingRain], // Pioggia gelata leggera
+    67: ["Heavy freezing rain", freezingHeavyRain, freezingHeavyRain], // Pioggia gelata forte
+    71: ["Slight snow fall", sligthlySnow, sligthlySnow], // Nevicata debole
+    73: ["Moderate snow fall", snowFall, snowFall], // Nevicata moderata
+    75: ["Heavy snow fall", heavySnowFall, heavySnowFall], // Nevicata forte
+    77: ["Snow grains", snowFall, snowFall], // Granelli di neve
+    80: ["Slight rain showers", rain, rain], // Rovescio di pioggia debole
+    81: ["Moderate rain showers", moderateRain, moderateRain], // Rovescio di pioggia moderato
+    82: ["Heavy rain showers", heavyRain, heavyRain], // Rovescio di pioggia forte
+    85: ["Slight snow showers", sligthlySnow, sligthlySnow], // Rovescio di neve debole
+    86: ["Heavy snow showers", heavySnowFall, heavySnowFall], // Rovescio di neve forte
+    95: ["Thunderstorm", thunderstorm, thunderstorm], // Temporale
+    96: ["Thunderstorm with slight hail", thunderstormHail, thunderstormHail], // Temporale con grandine leggera
+    99: ["Thunderstorm with heavy hail", thunderstormHail, thunderstormHail], // Temporale con grandine forte
 };
 
 export default function Weather({ weather, activeTime }) {
     const temperature = weather.hourly.temperature_2m[activeTime];
     const code = weather.hourly.weather_code[activeTime];
-    const weatherDescription = WEATHER_CODES[code] || "Unknown";
+    const weatherInfo = WEATHER_CODES[code];
+    const weatherDescription = weatherInfo ? weatherInfo[0] : "Unknown";
 
     return (
         <>
             <p className='text-3xl'>{weatherDescription}</p>
-            <p className='text-8xl'>{Math.round(temperature)}°C</p>
+            <div className='relative h-[300px] w-[400px]'>
+                <img className='h-[300px] w-[300px] absolute bottom-0 left-0' src={WEATHER_CODES[code][1]}/>
+                <p className='absolute top-12 right-0 text-9xl'>{Math.round(temperature)}°</p>
+            </div>
         </>
     );
 }
