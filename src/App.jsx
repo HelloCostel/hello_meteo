@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import './App.css'
 
 //Open-meteo API
 import { fetchWeatherApi } from 'openmeteo'
@@ -13,10 +12,12 @@ import Widget from './components/Widget.jsx'
 import Wind from './components/Wind.jsx'
 import UvIndex from './components/UvIndex.jsx'
 import SunPosition from './components/SunPosition.jsx'
+import CurrentDate from './components/CurrentDate.jsx'
 
 export default function App() {
   //TO DO --> Update to use current device location as default coordinates
-  const currentHour = new Date().getHours().toString()
+  const date = new Date();
+  const currentHour = date.getHours().toString()
   const [lat, setLat] = useState(41.89)
   const [lon, setLon] = useState(12.48)
   const [activeTime, setActiveTime] = useState(currentHour)
@@ -116,12 +117,13 @@ export default function App() {
 
   return (
     <>
-      <section className='h-[60vh] w-[100vw] flex flex-col items-center justify-center'>
+      <section className='h-[60vh] w-[100vw] flex flex-col items-center justify-center p-8'>
         <Search getCoordinates={getCoordinates}/>
         {weather &&
         <Weather weather={weather} activeTime={activeTime}/>
         }
         <TimeCarousel activeTime={activeTime} setActiveTime={setActiveTime}/>
+        <CurrentDate date={date}/>
       </section>
       {weather &&
         <>
