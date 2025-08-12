@@ -67,10 +67,10 @@ export default function Weather({ weather, activeTime }) {
 
     return (
         <>
-            <p className='text-3xl'>{weatherDescription}</p>
+            <p className='text-3xl text-gray-600'>{weatherDescription}</p>
             <div className='relative h-[300px] w-[400px]'>
-                <img className='h-[300px] w-[300px] absolute bottom-0 left-0' src={WEATHER_CODES[code][1]}/>
-                <p className='absolute top-12 right-0 text-9xl'>{Math.round(temperature)}°</p>
+                <img className='h-[250px] w-[250px] absolute bottom-0 left-0' src={WEATHER_CODES[code][1]}/>
+                <div className='absolute top-12 right-0 text-9xl font-bold text-gray-600'>{Math.round(temperature)}°</div>
             </div>
         </>
     );
