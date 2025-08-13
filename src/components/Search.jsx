@@ -23,10 +23,10 @@ export default function Search({ getCoordinates }) {
 
     return (
         <>
-            <form className='mb-8 flex items-center justify-center'>
-                <input className='w-[300px] h-[50px] border border-sky-100 text-3xl text-center font-bold rounded-4xl focus:border focus:border-sky-200 text-gray-700' type="text" placeholder='Search city' onChange={(e) => setCity(e.target.value)} onFocus={handleFocus} onBlur={handleBlur}/>
+            <form className='w-full p-4 flex justify-center'>
+                <input className='m-1 p-1 box-border max-w-[80%] text-3xl text-center font-bold text-gray-600 border-none shadow rounded-full focus:outline-none focus:shadow-sky-300' type="text" placeholder='Search city' onChange={(e) => setCity(e.target.value)} onFocus={handleFocus} onBlur={handleBlur}/>
                 {visible &&
-                    <input className='w-[100px] h-[50px] bg-sky-200 rounded-4xl m-0 flex-none' type="submit" value="Search" onClick={callGetCoordinates}/>
+                    <input className='m-1 p-1 box-border text-l text-center font-bold text-white bg-sky-300 rounded-full' type="submit" value="Search" onClick={callGetCoordinates}/>
                 }
             </form>
         </>

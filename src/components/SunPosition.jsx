@@ -31,14 +31,14 @@ export default function SunPosition({ activeTime, sunrise, sunset }) {
 
     return (
         <>
-            <div className='w-[90vw] h-[50px] relative left-[50%] flex justify-center items-center transform -translate-x-1/2'>
-                <div className='w-full h-[2px] rounded-full bg-gray-400'></div>
-                <div className='absolute h-[45px] w-[45px] rounded-full sun-gradient transform -translate-x-1/2' style={offset}></div>
+            <div className='relative w-11/12 max-w-[600px] flex justify-center items-center mt-12 transform -translate-x-1/2 left-1/2'>
+                <div className='w-full h-0.5 bg-gray-400'></div>
+                <div className='absolute w-8 h-8 rounded-full sun-gradient transform -translate-x-1/2' style={offset}></div>
             </div>
-            <div className='w-[90vw] relative flex justify-between items-center left-[50%] transform -translate-x-1/2'>
-                    <div className='font-bold text-l text-gray-400 '>{sunrise}</div>
-                    <div className='font-bold text-l text-gray-400 '>{calcTimeTo()}</div>
-                    <div className='font-bold text-l text-gray-400 '>{sunset}</div>
+            <div className='relative w-11/12 max-w-[600px] flex justify-between items-center left-1/2 mt-4 transform -translate-x-1/2'>
+                    <div className='text-gray-400 font-bold'>{sunrise}</div>
+                    <div className='text-gray-400 font-bold'>{calcTimeTo()}</div>
+                    <div className='text-gray-400 font-bold'>{sunset}</div>
             </div>
         </>
     )

@@ -60,9 +60,9 @@ export default function TimeCarousel({ activeTime, setActiveTime }) {
     }, [activeTime])
 
     return (
-        <div className='mt-8 relative flex items-center w-[500px] h-[50px] overflow-x-scroll scroll-snap-x-mandatory scrollbar-hidden border border-transparent border-b-gray-200' ref={carouselRef}>
-            <div className='w-[100px] h-[50px] invisible scroll-snap-start flex-none'></div>
-            <div className='w-[100px] h-[50px] invisible scroll-snap-start flex-none'></div>
+        <div className='relative w-full max-w-[400px] h-8 flex left-1/2 transform -translate-x-1/2 overflow-x-scroll scrollbar-hidden snap-x snap-mandatory' ref={carouselRef}>
+            <TimeButton/>
+            <TimeButton/>
             {HOURS.map(hour => (
                 <TimeButton
                     key={hour}
@@ -71,8 +71,8 @@ export default function TimeCarousel({ activeTime, setActiveTime }) {
                     ref={element => (buttonRefs.current[hour] = element)}
                 />
             ))}
-            <div className='w-[100px] h-[50px] invisible scroll-snap-start flex-none'></div>
-            <div className='w-[100px] h-[50px] invisible scroll-snap-start flex-none'></div>
+            <TimeButton/>
+            <TimeButton/>
         </div>
     )
 }

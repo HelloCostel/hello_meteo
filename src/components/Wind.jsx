@@ -8,9 +8,9 @@ export default function Wind({ speed, direction}) {
     }
 
     return (
-        <div className='relative w-full h-full flex items-center justify-center'>
-            <div className='text-center'>Wind<br /><span>{speed} Km/h</span></div>
-            <img className='absolute top-0 left-0 w-full h-full' src={compassDirection} style={compassRotation}/>
+        <div className='w-full h-full flex flex-col items-center justify-center'>
+            <div>Wind<br /><span>{speed} Km/h</span></div>
+            <img className='absolute' src={compassDirection} style={compassRotation}/>
         </div>
     )
 }

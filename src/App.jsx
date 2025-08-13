@@ -117,7 +117,7 @@ export default function App() {
 
   return (
     <>
-      <section className='h-[60vh] w-[100vw] flex flex-col items-center justify-center p-8'>
+      <section>
         <Search getCoordinates={getCoordinates}/>
         {weather &&
         <Weather weather={weather} activeTime={activeTime}/>
@@ -126,17 +126,21 @@ export default function App() {
         <CurrentDate date={date}/>
       </section>
       {weather &&
-        <>
+        <section>
           <SunPosition isDay={weather.hourly.is_day[activeTime]} activeTime={activeTime} sunrise={weather.daily.sunrise[0]} sunset={weather.daily.sunset[0]}/>
-          <div className='w-full flex justify-center mt-8'>
+          <div className='relative w-full max-w-[400px] grid grid-cols-2 mt-12 left-1/2 transform -translate-x-1/2'>
+            <div className='flex items-center justify-center'>
             <Widget>
               <Wind speed={Math.floor(weather.hourly.wind_speed_10m[activeTime])} direction={weather.hourly.wind_direction_10m[activeTime]}/>
             </Widget>
+            </div>
+            <div className='flex items-center justify-center'>
             <Widget>
               <UvIndex level={Math.floor(weather.hourly.uv_index[activeTime])}/>
-            </Widget>
+            </Widget>   
+            </div>
           </div>
-        </>
+        </section>
       }
     </>
   )
