@@ -16,7 +16,9 @@ export default function Search({ getCoordinates }) {
     }
 
     const handleBlur = () => {
-        setVisible(false)
+        setTimeout(() => {
+            setVisible(false)
+        }, 200)
     }
 
     return (
