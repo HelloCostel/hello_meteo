@@ -27,6 +27,6 @@ export default function CurrentDate({ date }) {
     const month = MONTHS[date.getMonth()]
 
     return (
-        <div className='w-full mt-2 text-center text-gray-500 font-bold'>{day}, {date.getDate()} {month}</div>
+        <div className='w-full mt-13 text-center text-gray-500 font-bold'>{day}, {date.getDate()} {month}</div>
     )
 }
