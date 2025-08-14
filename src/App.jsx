@@ -128,7 +128,7 @@ export default function App() {
       {weather &&
         <section>
           <SunPosition isDay={weather.hourly.is_day[activeTime]} activeTime={activeTime} sunrise={weather.daily.sunrise[0]} sunset={weather.daily.sunset[0]}/>
-          <div className='relative w-full max-w-[400px] grid grid-cols-2 mt-12 left-1/2 transform -translate-x-1/2'>
+          <div className='relative w-full max-w-[400px] grid grid-cols-2 gap-4 p-4 mt-12 left-1/2 transform -translate-x-1/2'>
             <div className='flex items-center justify-center'>
             <Widget>
               <Wind speed={Math.floor(weather.hourly.wind_speed_10m[activeTime])} direction={weather.hourly.wind_direction_10m[activeTime]}/>
