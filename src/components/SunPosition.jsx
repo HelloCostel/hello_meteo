@@ -21,6 +21,7 @@ export default function SunPosition({ activeTime, sunrise, sunset }) {
         if (activeTime >= sunrise && activeTime <= sunset) {
             return `${sunset - activeTime} hours to sunset`
         }
+        //Sunrise of next day is aproximately the same as sunrise of current day. Until we don't count minutes, we can use data from current day avoiding another API request.
         else if (activeTime < sunrise) {
             return `${sunrise - activeTime} hours to sunrise`
         }
