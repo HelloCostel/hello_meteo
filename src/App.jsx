@@ -116,7 +116,7 @@ export default function App() {
 
 
   return (
-    <>
+    <div className='h-screen day-gradient overflow-y-scroll'>
       <section>
         <Search getCoordinates={getCoordinates}/>
         {weather &&
@@ -142,6 +142,6 @@ export default function App() {
           </div>
         </section>
       }
-    </>
+    </div>
   )
 }
