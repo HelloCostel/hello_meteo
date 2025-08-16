@@ -29,7 +29,7 @@ export default function App() {
     "daily": ["sunrise", "sunset"],
     "hourly": ["temperature_2m", "weather_code", "wind_speed_10m", "wind_direction_10m", "uv_index", "is_day"],
     "timezone": "auto",
-    "forecast_days": 1,
+    "forecast_days": 1
   };
 
   //Get coordinates from nominatim.org
@@ -127,7 +127,7 @@ export default function App() {
       </section>
       {weather &&
         <section>
-          <SunPosition isDay={weather.hourly.is_day[activeTime]} activeTime={activeTime} sunrise={weather.daily.sunrise[0]} sunset={weather.daily.sunset[0]}/>
+          <SunPosition isDay={weather.hourly.is_day[activeTime]} activeTime={currentHour} sunrise={weather.daily.sunrise[0]} sunset={weather.daily.sunset[0]}/>
           <div className='relative w-full max-w-[400px] grid grid-cols-2 gap-4 p-4 mt-12 left-1/2 transform -translate-x-1/2'>
             <div className='flex items-center justify-center'>
             <Widget>
