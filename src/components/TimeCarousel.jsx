@@ -8,7 +8,7 @@ export default function TimeCarousel({ activeTime, setActiveTime }) {
     const carouselRef = useRef(null)
     const buttonRefs = useRef({})
 
-    //Each time active time is changed, this function scroll to new hour button
+    //Scroll to proper button when activetime changes
     useEffect(() => {
         const carousel = carouselRef.current
         const activeButton = buttonRefs.current[activeTime]
@@ -20,7 +20,12 @@ export default function TimeCarousel({ activeTime, setActiveTime }) {
         }
     }, [activeTime])
 
-    const handleScroll = () => {
+    //Logic at scroll-end
+    useEffect(() => {
+        const carousel = carouselRef.current;
+        if (!carousel) return;
+
+        const handleScrollEnd = () => {
             const carousel = carouselRef.current
             const carouselCenter = carousel.scrollLeft + carousel.clientWidth / 2
             let minDistance = Infinity
@@ -37,10 +42,19 @@ export default function TimeCarousel({ activeTime, setActiveTime }) {
                     }
                 }
             })
-            if (closestTime && closestTime !== activeTime) {
+            //Control !== null because 0 is a falsy value
+            if (closestTime !== null && closestTime !== activeTime) {
                 setActiveTime(closestTime)
             }
-        }
+        };
+
+        carousel.addEventListener('scrollend', handleScrollEnd);    // 'scrollend' is better than onScrollEnd because it trigger only one time (while onScrollEnd trigger multiple times)
+        return () => {
+            if (carousel) {
+                carousel.removeEventListener('scrollend', handleScrollEnd);
+            }
+        };
+    }, [activeTime, setActiveTime]);
 
     const handleArrows = (direction) => {
         if (direction === 'back') {
@@ -59,8 +73,8 @@ export default function TimeCarousel({ activeTime, setActiveTime }) {
 
     return (
         <div className='relative h-12'>
-            <img onClick={() => handleArrows('back')} className='absolute rotate-180 top-1/2 left-2 w-4 h-4 transform -translate-y-1/2' src={arrow} />
-            <div onScrollEnd={handleScroll} className='absolute w-10/12 max-w-[400px] h-full flex left-1/2 transform -translate-x-1/2 overflow-x-scroll scrollbar-hidden snap-x snap-mandatory' ref={carouselRef}>
+            <img onClick={() => handleArrows('back')} className='absolute rotate-180 top-1/2 left-2 w-4 h-4 transform -translate-y-1/2 cursor-pointer' src={arrow} />
+            <div className='absolute w-10/12 max-w-[400px] h-full flex left-1/2 transform -translate-x-1/2 overflow-x-scroll scrollbar-hidden snap-x snap-mandatory' ref={carouselRef}>
                 <TimeButton/>
                 <TimeButton/>
                 {HOURS.map(hour => (
@@ -75,7 +89,7 @@ export default function TimeCarousel({ activeTime, setActiveTime }) {
                 <TimeButton/>
                 <TimeButton/>
             </div>
-            <img onClick={() => handleArrows('next')} className='absolute top-1/2 right-2 w-4 h-4 transform -translate-y-1/2' src={arrow} />
+            <img onClick={() => handleArrows('next')} className='absolute top-1/2 right-2 w-4 h-4 transform -translate-y-1/2 cursor-pointer' src={arrow} />
         </div>
     )
 }
