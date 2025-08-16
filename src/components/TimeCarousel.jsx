@@ -2,30 +2,26 @@ import { useRef, useEffect } from 'react'
 import TimeButton from './TimeButton.jsx'
 import arrow from '../assets/arrow.svg'
 
-const HOURS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23']
+const HOURS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
 
 export default function TimeCarousel({ activeTime, setActiveTime }) {
     const carouselRef = useRef(null)
     const buttonRefs = useRef({})
 
-    //Default time is current hour
+    //Each time active time is changed, this function scroll to new hour button
     useEffect(() => {
         const carousel = carouselRef.current
         const activeButton = buttonRefs.current[activeTime]
-        //Automatic scroll to default time
         if (carousel && activeButton) {
-            const scrollLeft = activeButton.offsetLeft - (carousel.clientWidth / 2) + (activeButton.offsetWidth / 2)
-            carousel.scrollTo({ left: scrollLeft, behavior: 'auto' })
+            carousel.scrollTo({
+                left: activeButton.offsetLeft - carousel.offsetWidth / 2 + activeButton.offsetWidth / 2,
+                behavior: 'smooth'
+            })
         }
-    }, [])
+    }, [activeTime])
 
-    // Update active time based on carousel scroll
-    useEffect(() => {
-        const carousel = carouselRef.current
-        if (!carousel) return
-
-        let scrollTimeout
-        const handleScroll = () => {
+    const handleScroll = () => {
+            const carousel = carouselRef.current
             const carouselCenter = carousel.scrollLeft + carousel.clientWidth / 2
             let minDistance = Infinity
             let closestTime = null
@@ -46,24 +42,25 @@ export default function TimeCarousel({ activeTime, setActiveTime }) {
             }
         }
 
-        const debouncedScrollHandler = () => {
-            clearTimeout(scrollTimeout)
-            // Slower scroll event listener to enhance performance
-            scrollTimeout = setTimeout(handleScroll, 10)
+    const handleArrows = (direction) => {
+        if (direction === 'back') {
+            if (activeTime === 0) {
+                return
+            }
+            setActiveTime(activeTime - 1)
         }
-
-        carousel.addEventListener('scroll', debouncedScrollHandler)
-
-        return () => {
-            clearTimeout(scrollTimeout)
-            carousel.removeEventListener('scroll', debouncedScrollHandler)
+        else if (direction === 'next') {
+            if (activeTime === 23) {
+                return
+            }
+            setActiveTime(activeTime + 1)
         }
-    }, [activeTime])
+    }
 
     return (
         <div className='relative h-12'>
-            <img className='absolute rotate-180 top-1/2 left-2 w-4 h-4 transform -translate-y-1/2' src={arrow} />
-            <div className='absolute w-10/12 max-w-[400px] h-full flex left-1/2 transform -translate-x-1/2 overflow-x-scroll scrollbar-hidden snap-x snap-mandatory' ref={carouselRef}>
+            <img onClick={() => handleArrows('back')} className='absolute rotate-180 top-1/2 left-2 w-4 h-4 transform -translate-y-1/2' src={arrow} />
+            <div onScrollEnd={handleScroll} className='absolute w-10/12 max-w-[400px] h-full flex left-1/2 transform -translate-x-1/2 overflow-x-scroll scrollbar-hidden snap-x snap-mandatory' ref={carouselRef}>
                 <TimeButton/>
                 <TimeButton/>
                 {HOURS.map(hour => (
@@ -72,12 +69,13 @@ export default function TimeCarousel({ activeTime, setActiveTime }) {
                         time={hour}
                         active={hour === activeTime}
                         ref={element => (buttonRefs.current[hour] = element)}
+                        setActiveTime={setActiveTime}
                     />
                 ))}
                 <TimeButton/>
                 <TimeButton/>
             </div>
-            <img className='absolute top-1/2 right-2 w-4 h-4 transform -translate-y-1/2' src={arrow} />
+            <img onClick={() => handleArrows('next')} className='absolute top-1/2 right-2 w-4 h-4 transform -translate-y-1/2' src={arrow} />
         </div>
     )
 }

@@ -1,11 +1,16 @@
 export default function SunPosition({ activeTime, sunrise, sunset }) {
-    activeTime = Number(activeTime);
     sunrise = sunrise.getHours();
     sunset = sunset.getHours();
 
     const calcOffset = () => {
         //Calc offset for sun
-        if (activeTime >= sunrise && activeTime <= sunset) {
+        if (activeTime < sunrise) {
+            return 0
+        }
+        else if (activeTime > sunset) {
+            return 100
+        }
+        else if (activeTime >= sunrise && activeTime <= sunset) {
             if (sunrise < sunset) {
                 const dayHours = sunset - sunrise
                 const offset = (activeTime - sunrise) / dayHours * 100

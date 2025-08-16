@@ -17,7 +17,7 @@ import CurrentDate from './components/CurrentDate.jsx'
 export default function App() {
   //TO DO --> Update to use current device location as default coordinates
   const date = new Date();
-  const currentHour = date.getHours().toString()
+  const currentHour = date.getHours()
   const [lat, setLat] = useState(41.89)
   const [lon, setLon] = useState(12.48)
   const [activeTime, setActiveTime] = useState(currentHour)
