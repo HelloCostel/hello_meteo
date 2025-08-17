@@ -5,8 +5,8 @@ export default function SunPosition({ currentHour, sunrise, sunset }) {
     const [eOffset, setEOffset] = useState(0)
     const [message, setMessage] = useState('')
 
-    const sunriseHour = sunrise.getHours();
-    const sunsetHour = sunset.getHours();
+    const sunriseHour = sunrise.getHours() - 2;
+    const sunsetHour = sunset.getHours() - 2;
 
     useEffect(() => {
         //Sun position at current hour
