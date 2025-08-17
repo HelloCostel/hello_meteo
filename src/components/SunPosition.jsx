@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import sun from '../assets/sun.svg'
 
-export default function SunPosition({ activeTime, sunrise, sunset }) {
+export default function SunPosition({ currentHour, sunrise, sunset }) {
     const [eOffset, setEOffset] = useState(0)
     const [message, setMessage] = useState('')
 
@@ -10,30 +10,30 @@ export default function SunPosition({ activeTime, sunrise, sunset }) {
 
     useEffect(() => {
         //Sun position at current hour
-        if (activeTime < sunriseHour) {
+        if (currentHour < sunriseHour) {
             setEOffset(0)
         }
-        else if (activeTime > sunsetHour) {
+        else if (currentHour > sunsetHour) {
             setEOffset(100)
         }
-        else if (activeTime >= sunriseHour && activeTime <= sunsetHour) {
+        else if (currentHour >= sunriseHour && currentHour <= sunsetHour) {
             if (sunriseHour < sunsetHour) {
                 const dayHours = sunsetHour - sunriseHour
-                const offset = (activeTime - sunriseHour) / dayHours * 100
+                const offset = (currentHour - sunriseHour) / dayHours * 100
                 setEOffset(offset)
             }
         }
 
         //Hours left to sunrise or sunset
-        if (activeTime >= sunriseHour && activeTime <= sunsetHour) {
-            setMessage(`${sunsetHour - activeTime} hours to sunset`)
+        if (currentHour >= sunriseHour && currentHour <= sunsetHour) {
+            setMessage(`${sunsetHour - currentHour} hours to sunset`)
         }
         //Sunrise of next day is aproximately the same as sunrise of current day. Until we don't count minutes, we can use data from current day avoiding more complex API request.
-        else if (activeTime < sunriseHour) {
-            setMessage(`${sunriseHour - activeTime} hours to sunrise`)
+        else if (currentHour < sunriseHour) {
+            setMessage(`${sunriseHour - currentHour} hours to sunrise`)
         }
-        else if (activeTime > sunsetHour) {
-            setMessage(`${(24 - activeTime) + sunriseHour} hours to sunrise`)
+        else if (currentHour > sunsetHour) {
+            setMessage(`${(24 - currentHour) + sunriseHour} hours to sunrise`)
         }
     }, [])
 

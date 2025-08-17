@@ -16,21 +16,34 @@ import CurrentDate from './components/CurrentDate.jsx'
 
 export default function App() {
   //TO DO --> Update to use current device location as default coordinates
+
+  //Get current date and hour
   const date = new Date();
   const currentHour = date.getHours()
+
+  //Parameters to get weather data from open-meteo.com
   const [lat, setLat] = useState(41.89)
   const [lon, setLon] = useState(12.48)
-  const [activeTime, setActiveTime] = useState(currentHour)
-  const prevActiveTime = useRef(0);
-  const [weather, setWeather] = useState();
   const weatherParams = {
     "latitude": lat,
     "longitude": lon,
     "daily": ["sunrise", "sunset"],
-    "hourly": ["temperature_2m", "weather_code", "wind_speed_10m", "wind_direction_10m", "uv_index", "is_day"],
+    "hourly": ["temperature_2m", "weather_code", "wind_speed_10m", "wind_direction_10m", "uv_index"],
     "timezone": "auto",
     "forecast_days": 1
   };
+
+  //State variables to handle render logic
+  const [activeTime, setActiveTime] = useState(currentHour)
+  const prevActiveTime = useRef(0)
+  const [weather, setWeather] = useState(false)
+  const [sunrise, setSunrise] = useState()
+  const [sunset, setSunset] = useState()
+  const [weatherCodes, setWeatherCodes] = useState()
+  const [temperatures, setTemperatures] = useState()
+  const [windSpeeds, setWindSpeeds] = useState()
+  const [windDirections, setWindDirections] = useState()
+  const [uvIndices, setUvIndices] = useState()
 
   //Get coordinates from nominatim.org
   const getCoordinates = async (cityName) => {
@@ -110,7 +123,14 @@ export default function App() {
           },
         }
         // 'weatherData' now contains a simple structure with arrays with datetime and weather data
-        setWeather(weatherData)
+        setWeather(true)
+        setSunrise(weatherData.daily.sunrise[0])
+        setSunset(weatherData.daily.sunset[0])
+        setWeatherCodes(weatherData.hourly.weather_code)
+        setTemperatures(weatherData.hourly.temperature_2m)
+        setWindSpeeds(weatherData.hourly.wind_speed_10m)
+        setWindDirections(weatherData.hourly.wind_direction_10m)
+        setUvIndices(weatherData.hourly.uv_index)
       }
       catch (error) {
         console.error('Error while fetching weather data:', error)
@@ -119,34 +139,28 @@ export default function App() {
     fetchWeatherData()
   }, [lat, lon])
 
-
   return (
     <div className='h-screen day-gradient overflow-y-scroll'>
-      <section>
         <Search getCoordinates={getCoordinates}/>
-        {weather &&
-        <Weather weather={weather} activeTime={activeTime} prevActiveTime={prevActiveTime}/>
-        }
-        <TimeCarousel activeTime={activeTime} setActiveTime={setActiveTime}/>
-        <CurrentDate date={date}/>
-      </section>
-      {weather &&
-        <section>
-          <SunPosition isDay={weather.hourly.is_day[activeTime]} activeTime={currentHour} sunrise={weather.daily.sunrise[0]} sunset={weather.daily.sunset[0]}/>
+        {weather === true &&
+        <>
+          <Weather weatherCodes={weatherCodes} temperatures={temperatures} activeTime={activeTime} prevActiveTime={prevActiveTime}/>
+          <TimeCarousel activeTime={activeTime} setActiveTime={setActiveTime}/>
+          <CurrentDate date={date}/>
+          <SunPosition currentHour={currentHour} sunrise={sunrise} sunset={sunset}/>
           <div className='relative w-full max-w-[400px] grid grid-cols-2 gap-4 p-4 mt-12 left-1/2 transform -translate-x-1/2'>
             <div className='flex items-center justify-center'>
-            <Widget>
-              <Wind speed={Math.floor(weather.hourly.wind_speed_10m[activeTime])} direction={weather.hourly.wind_direction_10m[activeTime]}/>
-            </Widget>
+              <Widget>
+                <Wind speed={Math.floor(windSpeeds[activeTime])} direction={windDirections[activeTime]}/>
+              </Widget>
             </div>
             <div className='flex items-center justify-center'>
-            <Widget>
-              <UvIndex level={Math.floor(weather.hourly.uv_index[activeTime])}/>
-            </Widget>   
+              <Widget>
+                <UvIndex level={Math.floor(uvIndices[activeTime])}/>
+              </Widget>   
             </div>
           </div>
-        </section>
-      }
+        </>}
     </div>
   )
 }

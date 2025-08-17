@@ -61,13 +61,13 @@ const WEATHER_CODES = {
     99: ["Thunderstorm with heavy hail", thunderstormHail, thunderstormHail], // Temporale con grandine forte
 };
 
-export default function Weather({ weather, activeTime, prevActiveTime }) {
+export default function Weather({ weatherCodes, temperatures, activeTime, prevActiveTime }) {
     const imgRef = useRef(null)
     const tempRef = useRef(null)
     const prevTempRef = useRef(null)
 
-    const temperature = Math.round(weather.hourly.temperature_2m[activeTime]);
-    const code = weather.hourly.weather_code[activeTime];
+    // const temperature = Math.round(weather.hourly.temperature_2m[activeTime]);
+    const code = weatherCodes[activeTime];
     const weatherInfo = WEATHER_CODES[code];
     const weatherDescription = weatherInfo ? weatherInfo[0] : "Unknown";
 
@@ -94,7 +94,7 @@ export default function Weather({ weather, activeTime, prevActiveTime }) {
             <p className='w-full text-center text-xl text-gray-500 font-bold'>{weatherDescription}</p>
             <div className='w-full flex justify-center items-center'>
                 <img ref={imgRef} className='relative left-8 w-[200px] h-[200px]' src={WEATHER_CODES[code][1]}/>
-                <div className='relative right-8 bottom-3 text-6xl text-gray-600'>{temperature}°</div>
+                <div className='relative right-8 bottom-3 text-6xl text-gray-600'>{Math.floor(temperatures[activeTime])}°</div>
             </div>
         </>
     );
