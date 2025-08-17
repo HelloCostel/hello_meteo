@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 //Open-meteo API
 import { fetchWeatherApi } from 'openmeteo'
@@ -21,8 +21,8 @@ export default function App() {
   const [lat, setLat] = useState(41.89)
   const [lon, setLon] = useState(12.48)
   const [activeTime, setActiveTime] = useState(currentHour)
+  const prevActiveTime = useRef(0);
   const [weather, setWeather] = useState();
-
   const weatherParams = {
     "latitude": lat,
     "longitude": lon,
@@ -50,6 +50,11 @@ export default function App() {
       console.error('Error while fetching coordinates:', error)
     }
   }
+
+  //At activeTime update, trace the previuos value to help decide animations direction
+  useEffect(() => {
+    prevActiveTime.current = activeTime
+  }, [activeTime])
 
   //Get weather data from open-meteo.com
   useEffect(() => {
@@ -120,7 +125,7 @@ export default function App() {
       <section>
         <Search getCoordinates={getCoordinates}/>
         {weather &&
-        <Weather weather={weather} activeTime={activeTime}/>
+        <Weather weather={weather} activeTime={activeTime} prevActiveTime={prevActiveTime}/>
         }
         <TimeCarousel activeTime={activeTime} setActiveTime={setActiveTime}/>
         <CurrentDate date={date}/>

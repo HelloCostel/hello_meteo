@@ -1,3 +1,5 @@
+import { useRef, useEffect } from 'react'
+import { gsap } from 'gsap'
 //Weather images
 import dayDepositingRimeFog from '../assets/day_depositing_rime_fog.svg'
 import dayFog from '../assets/day_fog.svg'
@@ -59,18 +61,40 @@ const WEATHER_CODES = {
     99: ["Thunderstorm with heavy hail", thunderstormHail, thunderstormHail], // Temporale con grandine forte
 };
 
-export default function Weather({ weather, activeTime }) {
-    const temperature = weather.hourly.temperature_2m[activeTime];
+export default function Weather({ weather, activeTime, prevActiveTime }) {
+    const imgRef = useRef(null)
+    const tempRef = useRef(null)
+    const prevTempRef = useRef(null)
+
+    const temperature = Math.round(weather.hourly.temperature_2m[activeTime]);
     const code = weather.hourly.weather_code[activeTime];
     const weatherInfo = WEATHER_CODES[code];
     const weatherDescription = weatherInfo ? weatherInfo[0] : "Unknown";
+
+    //Animation objects to use with gsap
+    const fromLeft = {opacity: 0, x: "-100px"}
+    const fromRight = {opacity: 0, x: "100px"}
+    const fromTop = {opacity: 0, y: "-100px"}
+    const fromBottom = {opacity: 0, y: "100px"}
+
+    useEffect(() => {
+        //Animate weather img
+        gsap.fromTo(imgRef.current,
+            activeTime > prevActiveTime.current ? fromRight : fromLeft,
+            {
+                duration:0.5,
+                x: "0px",
+                opacity: 1
+
+            })
+    }, [activeTime])
 
     return (
         <>
             <p className='w-full text-center text-xl text-gray-500 font-bold'>{weatherDescription}</p>
             <div className='w-full flex justify-center items-center'>
-                <img className='relative left-8 w-[200px] h-[200px]' src={WEATHER_CODES[code][1]}/>
-                <div className='relative right-8 bottom-3 text-6xl text-gray-600'>{Math.round(temperature)}°</div>
+                <img ref={imgRef} className='relative left-8 w-[200px] h-[200px]' src={WEATHER_CODES[code][1]}/>
+                <div className='relative right-8 bottom-3 text-6xl text-gray-600'>{temperature}°</div>
             </div>
         </>
     );
