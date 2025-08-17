@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import sun from '../assets/sun.svg'
 
 export default function SunPosition({ activeTime, sunrise, sunset }) {
     const [eOffset, setEOffset] = useState(0)
@@ -40,7 +41,7 @@ export default function SunPosition({ activeTime, sunrise, sunset }) {
         <>
             <div className='relative w-11/12 max-w-[600px] flex justify-center items-center mt-12 transform -translate-x-1/2 left-1/2'>
                 <div className='w-full h-0.5 bg-gray-400'></div>
-                <div className='absolute w-8 h-8 rounded-full sun-gradient transform -translate-x-1/2' style={{left: `${eOffset}%`}}></div>
+                <img className='absolute w-16 h-16 rounded-full transform -translate-x-1/2' style={{left: `${eOffset}%`}} src={sun}/>
             </div>
             <div className='relative w-11/12 max-w-[600px] flex justify-between items-center left-1/2 mt-4 transform -translate-x-1/2'>
                     <div className='text-gray-400 font-bold'>{sunriseHour}.{sunrise.getMinutes()}</div>
