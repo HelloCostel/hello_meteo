@@ -1,5 +1,10 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
+//Animation imports
 import { gsap } from 'gsap'
+import { useGSAP } from '@gsap/react'
+import { SwitchTransition, Transition } from 'react-transition-group'
+
+
 //Weather images
 import dayDepositingRimeFog from '../assets/day_depositing_rime_fog.svg'
 import dayFog from '../assets/day_fog.svg'
@@ -61,41 +66,61 @@ const WEATHER_CODES = {
     99: ["Thunderstorm with heavy hail", thunderstormHail, thunderstormHail], // Temporale con grandine forte
 };
 
-export default function Weather({ weatherCodes, temperatures, activeTime, prevActiveTime }) {
+export default function Weather({ weatherCodes, temperatures, activeTime }) {
+    const scope = useRef(null);
     const imgRef = useRef(null)
-    const tempRef = useRef(null)
-    const prevTempRef = useRef(null)
 
-    // const temperature = Math.round(weather.hourly.temperature_2m[activeTime]);
-    const code = weatherCodes[activeTime];
+    const { contextSafe } = useGSAP({ scope: scope });
+
+    const code = weatherCodes && weatherCodes[activeTime] !== undefined ? weatherCodes[activeTime] : 0;
     const weatherInfo = WEATHER_CODES[code];
     const weatherDescription = weatherInfo ? weatherInfo[0] : "Unknown";
+    const weatherImage = weatherInfo ? weatherInfo[1] : sun;
 
-    //Animation objects to use with gsap
-    const fromLeft = {opacity: 0, x: "-100px"}
-    const fromRight = {opacity: 0, x: "100px"}
-    const fromTop = {opacity: 0, y: "-100px"}
-    const fromBottom = {opacity: 0, y: "100px"}
-
-    useEffect(() => {
-        //Animate weather img
+    // Animation on mounting and first render
+    const onEnter = contextSafe(() => {
         gsap.fromTo(imgRef.current,
-            activeTime > prevActiveTime.current ? fromRight : fromLeft,
             {
-                duration:0.5,
-                x: "0px",
-                opacity: 1
+            scale: 0.3, 
+            opacity: 0,
+            },
+            {
+            scale: 1,
+            opacity: 1,
+            duration: 0.2,
+            });
+    });
 
-            })
-    }, [activeTime])
+    // Animation on unmounting
+    const onExit = contextSafe(() => {
+        gsap.to(imgRef.current, {
+            opacity: 0,
+            scale: 0.3,
+            duration: 0.5,
+            ease: 'power2.in',
+        });
+    });
 
     return (
-        <>
+        <div ref={scope}>
             <p className='w-full text-center text-xl text-gray-500 font-bold'>{weatherDescription}</p>
             <div className='w-full flex justify-center items-center'>
-                <img ref={imgRef} className='relative left-8 w-[200px] h-[200px]' src={WEATHER_CODES[code][1]}/>
+                <SwitchTransition mode="out-in">
+                    <Transition
+                        key={activeTime}
+                        nodeRef={imgRef}
+                        timeout={500}
+                        onEnter={onEnter}
+                        onExit={onExit}
+                        unmountOnExit>
+                        <img ref={imgRef}
+                            className='relative left-8 w-[200px] h-[200px]'
+                            src={weatherImage}
+                            alt={weatherDescription} />
+                    </Transition>
+                </SwitchTransition>
                 <div className='relative right-8 bottom-3 text-6xl text-gray-600'>{Math.floor(temperatures[activeTime])}°</div>
             </div>
-        </>
+        </div>
     );
 }
