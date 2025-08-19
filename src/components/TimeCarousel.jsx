@@ -1,11 +1,15 @@
 import { useRef, useEffect } from 'react'
 import TimeButton from './TimeButton.jsx'
 import arrow from '../assets/arrow.svg'
+import { gsap } from 'gsap'
+import { useGSAP } from '@gsap/react'
+
 
 const HOURS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
 
 export default function TimeCarousel({ activeTime, setActiveTime }) {
     const carouselRef = useRef(null)
+    const scope = useRef(null)
     const buttonRefs = useRef({})
 
     //Scroll to proper button when activetime changes
@@ -71,8 +75,22 @@ export default function TimeCarousel({ activeTime, setActiveTime }) {
         }
     }
 
+    useGSAP(() => {
+        gsap.fromTo(scope.current,
+            {
+                opacity: 0,
+                scale: 0.5,
+            },
+            {
+                opacity: 1,
+                scale: 1,
+                duration: 0.8,
+                ease: 'power2.out'
+            }
+    )}, [])
+
     return (
-        <div className='relative h-12'>
+        <div ref={scope} className='relative h-12'>
             <img onClick={() => handleArrows('back')} className='absolute rotate-180 top-1/2 left-2 w-4 h-4 transform -translate-y-1/2 cursor-pointer' src={arrow} />
             <div className='absolute w-10/12 max-w-[400px] h-full flex left-1/2 transform -translate-x-1/2 overflow-x-scroll scrollbar-hidden snap-x snap-mandatory' ref={carouselRef}>
                 <TimeButton/>

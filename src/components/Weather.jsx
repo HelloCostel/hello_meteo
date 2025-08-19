@@ -77,6 +77,22 @@ export default function Weather({ weatherCodes, temperatures, activeTime }) {
     const weatherDescription = weatherInfo ? weatherInfo[0] : "Unknown";
     const weatherImage = weatherInfo ? weatherInfo[1] : sun;
 
+    useGSAP(() => {
+        gsap.fromTo(scope.current,
+            {
+                opacity: 0,
+                scale: 0.5,
+                y: -150
+            },
+            {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power2.out'
+            }
+    )}, [])
+
     // Animation on mounting and first render
     const onEnter = contextSafe(() => {
         gsap.fromTo(imgRef.current,

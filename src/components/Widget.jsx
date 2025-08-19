@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
+import { gsap } from 'gsap'
+import { useGSAP } from '@gsap/react'
 
 export default function Widget({ children }) {
     const ref = useRef(null)
@@ -14,6 +16,23 @@ export default function Widget({ children }) {
 
         window.addEventListener('resize', handleHeight)
         return () => window.removeEventListener('resize', handleHeight)
+    })
+
+    useGSAP(() => {
+        gsap.fromTo(ref.current,
+        {
+            opacity: 0,
+            scale: 0.5,
+            y: 150
+        },
+        {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            delay: 0.6,
+            duration: 0.8,
+            ease: 'power2.out'
+        })
     })
 
     return (
