@@ -88,8 +88,8 @@ export default function Weather({ weatherCodes, temperatures, activeTime }) {
             scale: 1,
             opacity: 1,
             duration: 0.2,
-            });
-    });
+            })
+    })
 
     // Animation on unmounting
     const onExit = contextSafe(() => {
@@ -98,8 +98,8 @@ export default function Weather({ weatherCodes, temperatures, activeTime }) {
             scale: 0.3,
             duration: 0.5,
             ease: 'power2.in',
-        });
-    });
+        })
+    })
 
     return (
         <div ref={scope}>
@@ -107,7 +107,7 @@ export default function Weather({ weatherCodes, temperatures, activeTime }) {
             <div className='w-full flex justify-center items-center'>
                 <SwitchTransition mode="out-in">
                     <Transition
-                        key={activeTime}
+                        key={weatherImage}
                         nodeRef={imgRef}
                         timeout={500}
                         onEnter={onEnter}

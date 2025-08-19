@@ -35,7 +35,6 @@ export default function App() {
 
   //State variables to handle render logic
   const [activeTime, setActiveTime] = useState(currentHour)
-  const prevActiveTime = useRef(0)
   const [weather, setWeather] = useState(false)
   const [sunrise, setSunrise] = useState()
   const [sunset, setSunset] = useState()
@@ -63,11 +62,6 @@ export default function App() {
       console.error('Error while fetching coordinates:', error)
     }
   }
-
-  //At activeTime update, trace the previuos value to help decide animations direction
-  useEffect(() => {
-    prevActiveTime.current = activeTime
-  }, [activeTime])
 
   //Get weather data from open-meteo.com
   useEffect(() => {
@@ -144,7 +138,7 @@ export default function App() {
         <Search getCoordinates={getCoordinates}/>
         {weather === true &&
         <>
-          <Weather weatherCodes={weatherCodes} temperatures={temperatures} activeTime={activeTime} prevActiveTime={prevActiveTime}/>
+          <Weather weatherCodes={weatherCodes} temperatures={temperatures} activeTime={activeTime}/>
           <TimeCarousel activeTime={activeTime} setActiveTime={setActiveTime}/>
           <CurrentDate date={date}/>
           <SunPosition currentHour={currentHour} sunrise={sunrise} sunset={sunset}/>
