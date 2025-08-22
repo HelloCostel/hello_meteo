@@ -7,8 +7,8 @@ export default function SunPosition({ currentHour, sunrise, sunset }) {
     const sunRef = useRef(null);
     const scope = useRef(null);
 
-    const sunriseHour = sunrise.getHours();
-    const sunsetHour = sunset.getHours();
+    const sunriseHour = sunrise.getHours() - 2;
+    const sunsetHour = sunset.getHours() - 2;
 
     let eOffset = 0;
     if (currentHour > sunsetHour) {
